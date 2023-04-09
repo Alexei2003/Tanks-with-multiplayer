@@ -1,6 +1,6 @@
 ﻿namespace Kyrsach
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         ///  Required designer variable.
@@ -18,6 +18,14 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Pen pen = new Pen(Color.Black);
+            Rectangle rect = new Rectangle(10, 10, 100, 100);
+            g.DrawRectangle(pen, rect);
         }
 
         #region Windows Form Designer generated code

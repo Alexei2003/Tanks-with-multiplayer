@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WPS\\КСиС\\Kyrsach\\Kyrsach\\Kyrsach.csproj": {}
+    "D:\\WPS\\КСиС\\Tanks with multiplayer\\Kyrsach\\Kyrsach.csproj": {}
   },
   "projects": {
-    "D:\\WPS\\КСиС\\Kyrsach\\Kyrsach\\Kyrsach.csproj": {
+    "D:\\WPS\\КСиС\\Tanks with multiplayer\\Kyrsach\\Kyrsach.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WPS\\КСиС\\Kyrsach\\Kyrsach\\Kyrsach.csproj",
+        "projectUniqueName": "D:\\WPS\\КСиС\\Tanks with multiplayer\\Kyrsach\\Kyrsach.csproj",
         "projectName": "Kyrsach",
-        "projectPath": "D:\\WPS\\КСиС\\Kyrsach\\Kyrsach\\Kyrsach.csproj",
+        "projectPath": "D:\\WPS\\КСиС\\Tanks with multiplayer\\Kyrsach\\Kyrsach.csproj",
         "packagesPath": "C:\\Users\\Prinz Eugen\\.nuget\\packages\\",
-        "outputPath": "D:\\WPS\\КСиС\\Kyrsach\\Kyrsach\\obj\\",
+        "outputPath": "D:\\WPS\\КСиС\\Tanks with multiplayer\\Kyrsach\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
