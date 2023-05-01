@@ -8,6 +8,76 @@ namespace Kyrsach.Game_objects.Base
 {
     internal class BaseTank
     {
+        // Интерфейс
+        // Константы
+
+        // Типы
+        public struct TankGraphis
+        {
+            public Rectangle caterpillar;
+            public Rectangle caterpillar2;
+            public Rectangle track;
+            public Rectangle body;
+            public Point[] tower;
+            public Rectangle gun;
+
+            public TankGraphis()
+            {
+                caterpillar = new Rectangle();
+                caterpillar2 = new Rectangle();
+                track = new Rectangle();
+                body = new Rectangle();
+                tower = new Point[COUNT_CORNERS_TOWER];
+                gun = new Rectangle();
+            }
+        }
+
+        // Поля
+        public TankGraphis[] TankDirection { get; set; }
+
+
+        // Методы
+        public BaseTank()
+        {
+            firstDark = true;
+
+            TankDirection = new TankGraphis[4];
+
+            TankDirection[(int)Const.Direction.UP] = CreateUpFigure();
+            TankDirection[(int)Const.Direction.RIGHT] = CreateRightFigure();
+            TankDirection[(int)Const.Direction.DOWN] = CreateDownFigure();
+            TankDirection[(int)Const.Direction.LEFT] = CreateLeftFigure();
+
+        }
+        public void Paint(Graphics graphics, Const.Direction direction, int x, int y)
+        {
+            Pen pen = new Pen(Color.Black, 2);
+            Brush brush = new SolidBrush(Color.Red);
+            graphics.FillRectangle(brush, OffsetRectangle(TankDirection[(int)direction].caterpillar, x, y));
+            graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].caterpillar, x, y));
+            graphics.FillRectangle(brush, OffsetRectangle(TankDirection[(int)direction].caterpillar2, x, y));
+            graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].caterpillar2, x, y));
+
+            graphics.FillRectangle(brush, OffsetRectangle(TankDirection[(int)direction].track, x, y));
+            graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].track, x, y));
+
+            graphics.FillRectangle(brush, OffsetRectangle(TankDirection[(int)direction].body, x, y));
+            graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].body, x, y));
+            graphics.FillRectangle(brush, OffsetRectangle(TankDirection[(int)direction].gun, x, y));
+            graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].gun, x, y));
+            
+            graphics.DrawPolygon(pen, OffsetPoints(TankDirection[(int)direction].tower,x,y));
+
+        }
+        public void Move()
+        {
+            firstDark = !firstDark;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Реализация
+        // Константы
         private const int COUNT_TRACK = 4;
         private const int SIZE_TRACK = 5;
 
@@ -17,167 +87,117 @@ namespace Kyrsach.Game_objects.Base
         private const int COUNT_CORNERS_TOWER = 8;
         private const int COUNT_CORNERS_GUN = 4;
 
+        // Типы
+
+
+        // Поля
         private bool firstDark;
 
-        private struct Square
+        // Методы
+        private TankGraphis CreateUpFigure()
         {
-            public int x1; 
-            public int y1;
-            public int x2;
-            public int y2;
+            TankGraphis up = new TankGraphis();
 
-            public void SetCoordinates(int x1, int y1, int x2, int y2)
-            {
-                this.x1 = x1;
-                this.y1 = y1;
-                this.x2 = x2;
-                this.y2 = y2;
-            }
-        }
+            up.caterpillar = new Rectangle(-20, -20, 10, 40);
+            up.caterpillar2 = new Rectangle(10, -20, 10, 40);
+            up.track = new Rectangle(-20, -20, 10, 5);
 
-        private struct Point
-        {
-            public int x;
-            public int y;
+            up.body = new Rectangle(-15, -15, 30, 30);
+            up.tower[0] = new Point(-5, -10);
+            up.tower[1] = new Point(-10, -5);
+            up.tower[2] = new Point(-10, 5);
+            up.tower[3] = new Point(-5, 10);
+            up.tower[4] = new Point(5, 10);
+            up.tower[5] = new Point(10, 5);
+            up.tower[6] = new Point(10, -5);
+            up.tower[7] = new Point(5, -10);
 
-            public void SetCoordinates(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-        }
-
-        private struct Figures
-        {
-            public Square caterpillar;
-            public Square caterpillar2;
-            public Square track;
-            public Square body;
-            public Point[] tower;
-            public Square gun;
-
-            public Figures()
-            {
-                caterpillar = new Square();
-                caterpillar2 = new Square();
-                track = new Square();
-                body = new Square();
-                tower = new Point[COUNT_CORNERS_TOWER];
-                gun = new Square();
-            }
-        }
-
-        public BaseTank()
-        {
-            firstDark = true;
-
-            Figures up = CreateUpFigure();
-            Figures right = CreateRightFigure();
-            Figures down = CreateDownFigure();
-            Figures left = CreateLeftFigure();
-
-        }
-
-        private Figures CreateUpFigure()
-        {
-            Figures up = new Figures();
-
-            up.caterpillar.SetCoordinates(-20, 20, -10, -20);
-            up.caterpillar2.SetCoordinates(10, 20, 20, -20);
-            up.track.SetCoordinates(-20, 20, -10, 15);
-
-            up.body.SetCoordinates(-15, 15, 15, -15);
-            up.tower[0].SetCoordinates(-5, 10);
-            up.tower[1].SetCoordinates(-10, 5);
-            up.tower[2].SetCoordinates(-10, -5);
-            up.tower[3].SetCoordinates(-5, -10);
-            up.tower[4].SetCoordinates(5, -10);
-            up.tower[5].SetCoordinates(10, -5);
-            up.tower[6].SetCoordinates(10, 5);
-            up.tower[7].SetCoordinates(5, 10);
-
-            up.gun.SetCoordinates(-5, 25, 5, 10);
+            up.gun = new Rectangle(-5, -25, 10, 15);
 
             return up;
         }
 
-        private Figures CreateRightFigure()
+        private TankGraphis CreateRightFigure()
         {
-            Figures right = new Figures();
+            TankGraphis right = new TankGraphis();
 
-            right.caterpillar.SetCoordinates(-20,20,20,10);
-            right.caterpillar2.SetCoordinates(-20,-10,20,-20);
-            right.track.SetCoordinates(15,20,20,10);
+            right.caterpillar = new Rectangle(-20, -20, 40, 10);
+            right.caterpillar2 = new Rectangle(-20, 10, 40, 10);
+            right.track = new Rectangle(15, -20, 5, 10);
 
-            right.body.SetCoordinates(-15, 15, 15, -15);
-            right.tower[0].SetCoordinates(-5, 10);
-            right.tower[1].SetCoordinates(-10, 5);
-            right.tower[2].SetCoordinates(-10, -5);
-            right.tower[3].SetCoordinates(-5, -10);
-            right.tower[4].SetCoordinates(5, -10);
-            right.tower[5].SetCoordinates(10, -5);
-            right.tower[6].SetCoordinates(10, 5);
-            right.tower[7].SetCoordinates(5, 10);
+            right.body = new Rectangle(-15, -15, 30, 30);
+            right.tower[0] = new Point(10, -5);
+            right.tower[1] = new Point(5, -10);
+            right.tower[2] = new Point(-5, -10);
+            right.tower[3] = new Point(-10, -5);
+            right.tower[4] = new Point(-10, 5);
+            right.tower[5] = new Point(-5, 10);
+            right.tower[6] = new Point(5, 10);
+            right.tower[7] = new Point(10, 5);
 
-            right.gun.SetCoordinates(10,5,25,-5);
+            right.gun = new Rectangle(10, -5, 15, 10);
 
             return right;
         }
 
-        private Figures CreateDownFigure()
+        private TankGraphis CreateDownFigure()
         {
-            Figures down = new Figures();
+            TankGraphis down = new TankGraphis();
 
-            down.caterpillar.SetCoordinates(-20,20,-10,-20);
-            down.caterpillar2.SetCoordinates(10,20,-20,10);
-            down.track.SetCoordinates(10,-15,20,-20);
+            down.caterpillar = new Rectangle(-20, -20, 10, 40);
+            down.caterpillar2 = new Rectangle(10, -20, 10, 40);
+            down.track = new Rectangle(10, 15, 10, 5);
 
-            down.body.SetCoordinates(-15, 15, 15, -15);
-            down.tower[0].SetCoordinates(-5, 10);
-            down.tower[1].SetCoordinates(-10, 5);
-            down.tower[2].SetCoordinates(-10, -5);
-            down.tower[3].SetCoordinates(-5, -10);
-            down.tower[4].SetCoordinates(5, -10);
-            down.tower[5].SetCoordinates(10, -5);
-            down.tower[6].SetCoordinates(10, 5);
-            down.tower[7].SetCoordinates(5, 10);
+            down.body = new Rectangle(-15, -15, 30, 30);
+            down.tower[0] = new Point(5,10);
+            down.tower[1] = new Point(10,5);
+            down.tower[2] = new Point(10,-5);
+            down.tower[3] = new Point(5,-10);
+            down.tower[4] = new Point(-5,-10);
+            down.tower[5] = new Point(-10,-5);
+            down.tower[6] = new Point(-10,5);
+            down.tower[7] = new Point(-5,10);
 
-            down.gun.SetCoordinates(-5,-10,5,-25);
+            down.gun = new Rectangle(-5, 10, 10, 15);
 
             return down;
         }
 
-        private Figures CreateLeftFigure()
+        private TankGraphis CreateLeftFigure()
         {
-            Figures left = new Figures();
+            TankGraphis left = new TankGraphis();
 
-            left.caterpillar.SetCoordinates(-20,20,20,10);
-            left.caterpillar2.SetCoordinates(-20,-10,20,-20);
-            left.track.SetCoordinates(-20,-10,20,-20);
+            left.caterpillar = new Rectangle(-20, -20, 40, 10);
+            left.caterpillar2 = new Rectangle(-20, 10, 40, 10);
+            left.track = new Rectangle(-20, 10, 5, 10);
 
-            left.body.SetCoordinates(-15, 15, 15, -15);
-            left.tower[0].SetCoordinates(-5, 10);
-            left.tower[1].SetCoordinates(-10, 5);
-            left.tower[2].SetCoordinates(-10, -5);
-            left.tower[3].SetCoordinates(-5, -10);
-            left.tower[4].SetCoordinates(5, -10);
-            left.tower[5].SetCoordinates(10, -5);
-            left.tower[6].SetCoordinates(10, 5);
-            left.tower[7].SetCoordinates(5, 10);
+            left.body = new Rectangle(-15, -15, 30, 30);
+            left.tower[0] = new Point(-10,5);
+            left.tower[1] = new Point(-5,10);
+            left.tower[2] = new Point(5,10);
+            left.tower[3] = new Point(10,5);
+            left.tower[4] = new Point(10,-5);
+            left.tower[5] = new Point(5,-10);
+            left.tower[6] = new Point(-5,-10);
+            left.tower[7] = new Point(-10, -5);
 
-            left.gun.SetCoordinates(-25,5,-10,-5);
+            left.gun = new Rectangle(-25, -5, 15, 10);
 
             return left;
         }
 
-        public void Move()
+        private Rectangle OffsetRectangle(Rectangle rect, int x, int y)
         {
-            firstDark = !firstDark;
+            rect.Offset(x, y);
+            return rect;
         }
-
-        public void Paint(int direction, int x, int y)
+        private Point[] OffsetPoints(Point[] points, int x, int y)
         {
-      
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i].Offset(x, y);
+            }
+            return points;
         }
     }
 }

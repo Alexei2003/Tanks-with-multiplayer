@@ -5,3 +5,13 @@ D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.AssemblyInfoInputs.cache
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.AssemblyInfo.cs
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.csproj.CoreCompileInputs.cache
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\bin\Debug\net6.0-windows\Kyrsach.exe
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\bin\Debug\net6.0-windows\Kyrsach.deps.json
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\bin\Debug\net6.0-windows\Kyrsach.runtimeconfig.json
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\bin\Debug\net6.0-windows\Kyrsach.dll
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\bin\Debug\net6.0-windows\Kyrsach.pdb
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.dll
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\refint\Kyrsach.dll
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.pdb
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\Kyrsach.genruntimeconfig.cache
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Debug\net6.0-windows\ref\Kyrsach.dll
