@@ -25,6 +25,7 @@ namespace Kyrsach.Game_objects
 
         public int X2 { get; set; }
         public int Y2 { get; set; }
+        public int HP { get; set; } = 1;
 
         // Методы
         public Tank(int x, int y, bool bot, Const.Direction direction)
@@ -69,13 +70,11 @@ namespace Kyrsach.Game_objects
             X2 = x + SIZE_HITBOX;
             Y1 = y - SIZE_HITBOX;
             Y2 = y + SIZE_HITBOX;
-            this.direction = direction;
         }
 
         public Shell Shoot()
         {
-            Shell shell = new Shell();
-            return shell;
+            return new Shell(x,y,direction,damage,speed);
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,9 +88,8 @@ namespace Kyrsach.Game_objects
 
         // Поля
         //статы
-        private int hp = 1;
         private int damage = 1;
-        private int speed = 3;
+        private int speed = 5;
         private int reload = 1;
 
         //техническая информация отображаемая
