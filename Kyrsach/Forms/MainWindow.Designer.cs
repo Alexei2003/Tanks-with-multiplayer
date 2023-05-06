@@ -34,10 +34,12 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(934, 909);
+            DoubleBuffered = true;
             Name = "MainWindow";
             Text = "Form1";
             Paint += MainWindow_Paint;
+            KeyDown += MainWindow_KeyDown;
             ResumeLayout(false);
         }
 
