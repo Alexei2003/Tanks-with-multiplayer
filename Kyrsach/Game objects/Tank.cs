@@ -27,6 +27,8 @@ namespace Kyrsach.Game_objects
         public int Y2 { get; set; }
         public int HP { get; set; } = 1;
 
+        public Const.Direction keyDirection { get; set; } = Const.Direction.DEFAULT;
+
         // Методы
         public Tank(int x, int y, bool bot, Const.Direction direction)
         {

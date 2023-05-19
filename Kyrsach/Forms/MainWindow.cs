@@ -23,7 +23,12 @@ namespace Kyrsach
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            logic.KeyDown(e, 0);
+            logic.KeyDown(e);
+        }
+
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            logic.KeyUp(e);
         }
     }
 }

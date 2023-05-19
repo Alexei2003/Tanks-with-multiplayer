@@ -10,7 +10,7 @@ namespace Kyrsach
     {
         public enum Direction
         {
-            UP, RIGHT, DOWN, LEFT
+            UP, RIGHT, DOWN, LEFT,SPACE, DEFAULT
         }
 
         public enum ListAction

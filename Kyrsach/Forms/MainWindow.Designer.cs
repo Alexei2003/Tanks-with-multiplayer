@@ -40,6 +40,7 @@
             Text = "Form1";
             Paint += MainWindow_Paint;
             KeyDown += MainWindow_KeyDown;
+            KeyUp += MainWindow_KeyUp;
             ResumeLayout(false);
         }
 

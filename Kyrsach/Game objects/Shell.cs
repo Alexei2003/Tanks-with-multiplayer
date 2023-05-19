@@ -24,11 +24,12 @@ namespace Kyrsach.Game_objects
 
         public int X2 { get; set; }
         public int Y2 { get; set; }
+        public int Damage { get; set; }
 
         // Методы
         public Shell(int x, int y, Const.Direction direction, int damage, int speed) 
         {
-            this.damage = damage;
+            this.Damage = damage;
             this.direction = direction;
             this.speed = speed * 2;
             switch (direction)
@@ -98,7 +99,6 @@ namespace Kyrsach.Game_objects
 
         // Поля
         //статы
-        private int damage;
         private int speed;
 
         //техническая информация отображаемая
