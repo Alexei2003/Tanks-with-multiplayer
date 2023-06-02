@@ -15,3 +15,4 @@ D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Release\net6.0-windows\refint
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Release\net6.0-windows\Kyrsach.pdb
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Release\net6.0-windows\Kyrsach.genruntimeconfig.cache
 D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Release\net6.0-windows\ref\Kyrsach.dll
+D:\WPS\КСиС\Tanks with multiplayer\Kyrsach\obj\Release\net6.0-windows\Kyrsach.Properties.Resources.resources

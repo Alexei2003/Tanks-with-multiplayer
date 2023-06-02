@@ -39,11 +39,14 @@ namespace Kyrsach.Game_objects
         public int Y { get; set; }
 
         // Методы
-        public Shell(int x, int y, Const.Direction direction, int damage, int speed) 
+        public Shell(int x, int y, Const.Direction direction, int damage, int speed)
         {
+            // Установка урона, направления и скорости снаряда
             this.Damage = damage;
             this.Direction = direction;
             this.Speed = speed * 2;
+
+            // Установка начальных координат снаряда в зависимости от направления
             switch (direction)
             {
                 case Const.Direction.UP:
@@ -51,19 +54,20 @@ namespace Kyrsach.Game_objects
                     this.Y = y - 25;
                     break;
                 case Const.Direction.RIGHT:
-                    this.X = x+25;
+                    this.X = x + 25;
                     this.Y = y;
                     break;
                 case Const.Direction.DOWN:
                     this.X = x;
-                    this.Y = y+25;
+                    this.Y = y + 25;
                     break;
                 case Const.Direction.LEFT:
-                    this.X = x-25;
+                    this.X = x - 25;
                     this.Y = y;
                     break;
             }
         }
+
 
         public Shell()
         {

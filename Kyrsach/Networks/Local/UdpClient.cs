@@ -31,7 +31,6 @@ namespace Kyrsach.Networks.Local
         public UdpClient(string serverIP, bool server)
         {
             this.serverIP = serverIP;
-            bytes = new byte[1024];
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             if (!server)
@@ -48,8 +47,10 @@ namespace Kyrsach.Networks.Local
 
         public async void GetData(Tank[] tanks, int numbTank, List<Shell> shells, object lockShell)
         {
+            bytes = new byte[1024];
             await socket.ReceiveFromAsync(new ArraySegment<byte>(bytes), SocketFlags.None, endPoint);
             string str = Encoding.UTF8.GetString(bytes);
+            
             Queue<int> first = new Queue<int>();
             Queue<int> last = new Queue<int>();
             int i;

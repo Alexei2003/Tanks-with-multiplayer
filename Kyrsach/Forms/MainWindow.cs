@@ -4,6 +4,9 @@ using Kyrsach.Game_objects;
 using Kyrsach.Mechanics;
 using System.Drawing;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Net;
+using System.Windows.Forms;
 
 namespace Kyrsach
 {
@@ -37,20 +40,24 @@ namespace Kyrsach
             startGame = false;
 
             cbCountPlayers.SelectedIndex = 0;
+
+            tbIP1.Text = GetIPAddress();
+            tbClientIP.Text = tbIP1.Text;
         }
 
         private void Repaint(object state)
         {
-            Invalidate();
+            pbGameZone.Invalidate();
         }
 
-        private async void MainWindow_Paint(object sender, PaintEventArgs e)
+        private void pbGameZone_Paint(object sender, PaintEventArgs e)
         {
             if (startGame)
             {
                 logic.Paint(e.Graphics);
             }
         }
+
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
@@ -82,10 +89,10 @@ namespace Kyrsach
             if (countPlayers != 0)
             {
                 this.Text = "Сервер";
-                pClient.Visible = false;
                 pServer.Visible = false;
                 this.Focus();
-                this.Size = new Size(950, 950);
+                pGameInfo.Visible = true;
+                pbGameZone.Visible = true;
 
                 string[] iPs = new string[countPlayers];
 
@@ -106,7 +113,7 @@ namespace Kyrsach
                     }
                 }
 
-                logic = new Logic(countPlayers, iPs, iPs[0],true);
+                logic = new Logic(countPlayers, iPs, iPs[0], true);
 
                 startGame = true;
             }
@@ -115,14 +122,90 @@ namespace Kyrsach
         private void bStartGameClient_Click(object sender, EventArgs e)
         {
             this.Text = "Клиент";
+            logic = new Logic(0, null, tbServerIp.Text, false);
             pClient.Visible = false;
-            pServer.Visible = false;
             this.Focus();
-            this.Size = new Size(950, 950);
-
-            logic = new Logic(0, null, tbServerIp.Text,false);
+            pGameInfo.Visible = true;
+            pbGameZone.Visible = true;
 
             startGame = true;
         }
+        private static string GetIPAddress()
+        {
+            string ipAddress = string.Empty;
+
+            // Получаем все сетевые интерфейсы компьютера
+            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface networkInterface in networkInterfaces)
+            {
+                // Проверяем только активные сетевые интерфейсы, не виртуальные и не петлевые
+                if (networkInterface.OperationalStatus == OperationalStatus.Up &&
+                    networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+                    networkInterface.NetworkInterfaceType != NetworkInterfaceType.Unknown &&
+                    networkInterface.NetworkInterfaceType != NetworkInterfaceType.Tunnel)
+                {
+                    // Получаем IP-адреса для данного интерфейса
+                    IPInterfaceProperties properties = networkInterface.GetIPProperties();
+                    foreach (UnicastIPAddressInformation address in properties.UnicastAddresses)
+                    {
+                        // Выбираем IPv4-адреса, пропускаем локальные и несетевые адреса
+                        if (address.Address.AddressFamily == AddressFamily.InterNetwork &&
+                            !IPAddress.IsLoopback(address.Address) &&
+                            !address.Address.Equals(IPAddress.None) &&
+                            !address.Address.Equals(IPAddress.Any))
+                        {
+                            ipAddress = address.Address.ToString();
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(ipAddress))
+                    {
+                        break;
+                    }
+                }
+            }
+            return ipAddress;
+        }
+
+        private void bExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void bServer_Click(object sender, EventArgs e)
+        {
+            pServer.Visible = true;
+            pMainMenu.Visible = false;
+        }
+
+        private void bClient_Click(object sender, EventArgs e)
+        {
+            pClient.Visible = true;
+            pMainMenu.Visible = false;
+        }
+
+        private void bServerBack_Click(object sender, EventArgs e)
+        {
+            pServer.Visible = false;
+            pMainMenu.Visible = true;
+        }
+
+        private void bClientBack_Click(object sender, EventArgs e)
+        {
+            pClient.Visible = false;
+            pMainMenu.Visible = true;
+        }
+
+        private void bGameInfoBack_Click(object sender, EventArgs e)
+        {
+            pGameInfo.Visible = false;
+            pMainMenu.Visible = true;
+            pbGameZone.Visible = false;
+            logic.Close();
+        }
+
+
     }
 }

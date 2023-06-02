@@ -1,5 +1,6 @@
 ﻿using Kyrsach.Game_objects;
 using Kyrsach.Networks.Local;
+using System.Net.Http.Headers;
 
 namespace Kyrsach.Mechanics
 {
@@ -17,7 +18,7 @@ namespace Kyrsach.Mechanics
         // Методы
         public Logic(int countTank, string[] iPs, string serverIp, bool server)
         {
-
+            this.server = server;
             TimerCallback timerCallback;
             if (!server)
             {
@@ -26,6 +27,8 @@ namespace Kyrsach.Mechanics
                 numbTank = udpClient.NumbTank;
                 countTank = udpClient.CountTank;
             }
+
+            this.countTank = countTank;
 
             listTanks = new Tank[countTank];
             if(countTank > 0)
@@ -57,7 +60,6 @@ namespace Kyrsach.Mechanics
 
             if (server)
             {
-                //udpClient = new UdpClient(serverIp,true);
                 udpServer = new UdpServer(countTank);
                 numbTank = 0;
                 udpServer.ClientsIP = iPs;
@@ -76,6 +78,20 @@ namespace Kyrsach.Mechanics
             {
                 timerCallback = new TimerCallback(ThreadNetworkClient);
                 timerNetwork = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+            }
+            timerCallback = new TimerCallback(ThreadMessage);
+            timerMessage = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, MESSAGE_TIME);
+        }
+
+        public void Close()
+        {
+            if (server)
+            {
+                udpServer.Close();
+            }
+            else
+            {
+                udpClient.Close();
             }
         }
 
@@ -105,6 +121,7 @@ namespace Kyrsach.Mechanics
                     shell.Paint(graphics);
                 }
             }
+            
         }
 
         public void KeyDown(KeyEventArgs e)
@@ -144,11 +161,14 @@ namespace Kyrsach.Mechanics
             }
         }
 
+
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Реализация
         // Константы
         private TimeSpan LOGIC_TIME = TimeSpan.FromMilliseconds(50);
+        private TimeSpan MESSAGE_TIME = TimeSpan.FromMilliseconds(100);
 
         // Типы
 
@@ -159,11 +179,16 @@ namespace Kyrsach.Mechanics
         private List<Shell> listShells;
         private int numbTank;
         private System.Threading.Timer timerLogic;
+        private System.Threading.Timer timerMessage;
         private System.Threading.Timer timerNetwork;
         private UdpClient udpClient;
         private UdpServer udpServer;
+        private bool message = false;
+        private int countTank;
+        private bool server;
 
         private object lockShell = new object();
+
 
         // Методы
         private bool CheckCollision(int x1, int y1, int x2, int y2, Const.Direction direction, int X1, int Y1, int X2, int Y2)
@@ -201,29 +226,36 @@ namespace Kyrsach.Mechanics
         private void CheckTankCollision(Tank selectTank, Const.Direction direction)
         {
             bool move = true;
+
+            // Проверка на столкновение с преградами (стенами)
             foreach (Wall wall in listWalls)
             {
                 if (CheckCollision(selectTank.X1, selectTank.Y1, selectTank.X2, selectTank.Y2, direction, wall.X1, wall.Y1, wall.X2, wall.Y2))
                 {
+                    // Если произошло столкновение, остановить движение
                     move = false;
                     break;
                 }
             }
 
+            // Проверка на столкновение с другими танками
             foreach (Tank tank in listTanks)
             {
                 if (tank != selectTank && CheckCollision(selectTank.X1, selectTank.Y1, selectTank.X2, selectTank.Y2, direction, tank.X1, tank.Y1, tank.X2, tank.Y2))
                 {
+                    // Если произошло столкновение, остановить движение
                     move = false;
                     break;
                 }
             }
 
+            // Если нет столкновений, переместить танк
             if (move)
             {
                 selectTank.Move(direction);
             }
         }
+
 
         private void ThreadLogic(object state)
         {
@@ -240,6 +272,35 @@ namespace Kyrsach.Mechanics
         {
             udpClient.SendDate(listTanks[numbTank]);
             udpClient.GetData(listTanks,numbTank,listShells,lockShell);
+        }
+
+        private void ThreadMessage(object state)
+        {
+            int countDied = 0;
+
+            foreach(Tank tank in listTanks)
+            {
+                if (tank.HP < 1)
+                {
+                    countDied++;
+                }
+            }
+
+            if (listTanks[numbTank].HP < 1 && !message)
+            {
+                message = true;
+                MessageBox.Show("Вы проиграли", "Помёр", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                timerMessage.Dispose();
+            }
+            else
+            {
+                if (countDied == countTank - 1 && !message)
+                {
+                    message = true;
+                    MessageBox.Show("Вы выиграли", "Победа", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    timerMessage.Dispose();
+                }
+            }
         }
 
         private void MoveShells()
@@ -350,6 +411,8 @@ namespace Kyrsach.Mechanics
             {
                 if (tank.HP < 1)
                 {
+                    tank.X = -100;
+                    tank.Y = -100;
                     continue;
                 }
                 switch (tank.keyDirection)

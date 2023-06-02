@@ -68,6 +68,7 @@ namespace Kyrsach.Game_objects
 
         public void Move(Const.Direction direction)
         {
+            // Изменение координат танка в зависимости от направления
             switch (direction)
             {
                 case Const.Direction.UP:
@@ -83,14 +84,21 @@ namespace Kyrsach.Game_objects
                     X -= speed;
                     break;
             }
+
+            // Обновление текущего направления танка
             this.Direction = direction;
+
+            // Изменение состояния переменной FirstDark для анимации гусиниц танка
             FirstDark = !FirstDark;
             tankGraphis.FirstDark = FirstDark;
+
+            // Обновление границ хитбокса танка
             X1 = X - SIZE_HITBOX;
             X2 = X + SIZE_HITBOX;
             Y1 = Y - SIZE_HITBOX;
             Y2 = Y + SIZE_HITBOX;
         }
+
 
         public Shell Shoot()
         {
