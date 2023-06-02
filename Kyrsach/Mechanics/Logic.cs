@@ -92,8 +92,11 @@ namespace Kyrsach.Mechanics
                 udpServer.SendAuthenticationData();
 
 
-                timerCallback = new TimerCallback(ThreadNetworkServer);
-                timerNetwork = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerCallback = new TimerCallback(ThreadNetworkServerSend);
+                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+
+                timerCallback = new TimerCallback(ThreadNetworkServerGet);
+                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
 
                 timerCallback = new TimerCallback(ThreadLogic);
                 timerLogic = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
@@ -101,8 +104,11 @@ namespace Kyrsach.Mechanics
 
             if (!server)
             {
-                timerCallback = new TimerCallback(ThreadNetworkClient);
-                timerNetwork = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerCallback = new TimerCallback(ThreadNetworkClientSend);
+                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+
+                timerCallback = new TimerCallback(ThreadNetworkClientGet);
+                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
             }
             timerCallback = new TimerCallback(ThreadMessage);
             timerMessage = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, MESSAGE_TIME);
@@ -205,7 +211,8 @@ namespace Kyrsach.Mechanics
         private int numbTank;
         private System.Threading.Timer timerLogic;
         private System.Threading.Timer timerMessage;
-        private System.Threading.Timer timerNetwork;
+        private System.Threading.Timer timerNetworkSend;
+        private System.Threading.Timer timerNetworkGet;
         private UdpClient udpClient;
         private UdpServer udpServer;
         private bool message = false;
@@ -287,16 +294,24 @@ namespace Kyrsach.Mechanics
             MoveShells();
             ControlTanks();
         }
-        private void ThreadNetworkServer(object state)
+        private void ThreadNetworkServerSend(object state)
         {
-            udpServer.GetDate(listTanks);
             udpServer.SendData(listTanks,listShells);
         }
 
-        private void ThreadNetworkClient(object state)
+        private void ThreadNetworkServerGet(object state)
+        {
+            udpServer.GetDate(listTanks);
+        }
+
+        private void ThreadNetworkClientSend(object state)
         {
             udpClient.SendDate(listTanks[numbTank]);
-            udpClient.GetData(listTanks,numbTank,listShells,lockShell);
+        }
+
+        private void ThreadNetworkClientGet(object state)
+        {
+            udpClient.GetData(listTanks, numbTank, listShells, lockShell);
         }
 
         private void ThreadMessage(object state)
