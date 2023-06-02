@@ -1,5 +1,7 @@
 ﻿using Kyrsach.Game_objects;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -29,10 +31,7 @@ namespace Kyrsach.Networks.Local
         public UdpClient(string serverIP, bool server)
         {
             this.serverIP = serverIP;
-
-            Tank obj = new Tank(0, 0, Const.Direction.LEFT);
-            string str = JsonSerializer.Serialize<Tank>(obj);
-            bytes = new byte[128];
+            bytes = new byte[1024];
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             if (!server)
@@ -47,13 +46,14 @@ namespace Kyrsach.Networks.Local
             await socket.SendToAsync(new ArraySegment<byte>(BitConverter.GetBytes(Convert.ToInt32(tank.keyDirection))), SocketFlags.None, endPoint);
         }
 
-        public async void GetData(Tank[] tanks,int numbTank)
+        public async void GetData(Tank[] tanks, int numbTank, List<Shell> shells, object lockShell)
         {
             await socket.ReceiveFromAsync(new ArraySegment<byte>(bytes), SocketFlags.None, endPoint);
             string str = Encoding.UTF8.GetString(bytes);
             Queue<int> first = new Queue<int>();
             Queue<int> last = new Queue<int>();
-            for (int i = 0; str[i] != '\0'; i++)
+            int i;
+            for (i = 0; str[i] != '\0'; i++)
             {
                 if (str[i] == '{')
                 {
@@ -64,7 +64,7 @@ namespace Kyrsach.Networks.Local
                     last.Enqueue(i);
                 }
             }
-            for (int i = 0; i < CountTank; i++)
+            for (i = 0; i < CountTank; i++)
             {
                 if (first.Count > 0 && last.Count > 0)
                 {
@@ -74,6 +74,23 @@ namespace Kyrsach.Networks.Local
                     tanks[i] = tank;
                 }
             }
+            lock (lockShell)
+            {
+                shells.Clear();
+                while (first.Count > 0 && last.Count > 0)
+                {
+                    if (last.Peek() < first.Peek())
+                    {
+                        last.Dequeue();
+                        continue;
+                    }
+                    string strShell = str.Substring(first.Peek(), last.Dequeue() - first.Dequeue() + 1);
+                    Shell shell = JsonSerializer.Deserialize<Shell>(strShell);
+                    shell.Initialization();
+                    shells.Add(shell);
+                }
+            }
+
         }
 
         public void GetAuthenticationData()

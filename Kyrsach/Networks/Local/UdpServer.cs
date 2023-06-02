@@ -37,13 +37,19 @@ namespace Kyrsach.Networks.Local
             socket.Bind(new IPEndPoint(IPAddress.Any, Const.PORT_FOR_GAME));
         }
 
-        public async void SendData(Tank[] listTank)
+        public async void SendData(Tank[] listTank, List<Shell> listShell)
         {
             string str = "";
             for (int i = 0; i < countTank; i++)
             {
                 str += JsonSerializer.Serialize<Tank>(listTank[i]);
             }
+
+            for (int i = 0; i < listShell.Count; i++)
+            {
+                str += JsonSerializer.Serialize<Shell>(listShell[i]);
+            }
+
             for (int i = 1; i < countTank; i++)
             {
                 await socket.SendToAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(str)), SocketFlags.None, endPoints[i]);

@@ -232,17 +232,14 @@ namespace Kyrsach.Mechanics
         }
         private void ThreadNetworkServer(object state)
         {
-            //udpClient.SendDate(listTanks[numbTank]);
-
             udpServer.GetDate(listTanks);
-
-            udpServer.SendData(listTanks);
+            udpServer.SendData(listTanks,listShells);
         }
 
         private void ThreadNetworkClient(object state)
         {
             udpClient.SendDate(listTanks[numbTank]);
-            udpClient.GetData(listTanks,numbTank);
+            udpClient.GetData(listTanks,numbTank,listShells,lockShell);
         }
 
         private void MoveShells()
@@ -252,7 +249,7 @@ namespace Kyrsach.Mechanics
             foreach (Shell shell in listShells)
             {
                 shell.Move();
-                switch (shell.direction)
+                switch (shell.Direction)
                 {
                     case Const.Direction.UP:
                         foreach (Tank tank in listTanks)

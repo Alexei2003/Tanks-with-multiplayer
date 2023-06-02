@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.Xml;
-using System.Text;
+﻿using Kyrsach.Game_objects.Base;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Kyrsach.Game_objects.Base;
 
 namespace Kyrsach.Game_objects
 {
@@ -33,13 +27,13 @@ namespace Kyrsach.Game_objects
         public int Y2 { get; set; }
         [JsonIgnore]
         public Const.Direction keyDirection { get; set; } = Const.Direction.DEFAULT;
-        [JsonIgnore]
+
         public int RemainingTimeReload { get; set; }
         public int HP { get; set; } = 1;
         public int X { get; set; }
         public int Y { get; set; }
+        public bool FirstDark { get; set; } = true;
         public Const.Direction Direction { get; set; }
-
 
         // Методы
         public Tank(int x, int y, Const.Direction direction)
@@ -90,7 +84,8 @@ namespace Kyrsach.Game_objects
                     break;
             }
             this.Direction = direction;
-            tankGraphis.Move();
+            FirstDark = !FirstDark;
+            tankGraphis.FirstDark = FirstDark;
             X1 = X - SIZE_HITBOX;
             X2 = X + SIZE_HITBOX;
             Y1 = Y - SIZE_HITBOX;
@@ -125,7 +120,7 @@ namespace Kyrsach.Game_objects
 
 
         // Поля
-        //статы
+
         private int damage = 1;
         private int speed = 5;
         private int timeReload = 10;

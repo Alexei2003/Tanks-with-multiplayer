@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Kyrsach.Game_objects.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static Kyrsach.Game_objects.Base.BaseTank;
 
 namespace Kyrsach.Game_objects
 {
+    [Serializable]
     internal class Shell
     {
         // Интерфейс
@@ -18,76 +22,92 @@ namespace Kyrsach.Game_objects
 
 
         // Поля
-        public Const.Direction direction { get; set; }
-        public int X1 { get; set; }
-        public int Y1 { get; set; }
 
+        [JsonIgnore]
+        public int X1 { get; set; }
+        [JsonIgnore]
+        public int Y1 { get; set; }
+        [JsonIgnore]
         public int X2 { get; set; }
+        [JsonIgnore]
         public int Y2 { get; set; }
+
+        public Const.Direction Direction { get; set; }
         public int Damage { get; set; }
+        public int Speed { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         // Методы
         public Shell(int x, int y, Const.Direction direction, int damage, int speed) 
         {
             this.Damage = damage;
-            this.direction = direction;
-            this.speed = speed * 2;
+            this.Direction = direction;
+            this.Speed = speed * 2;
             switch (direction)
             {
                 case Const.Direction.UP:
-                    this.x = x;
-                    this.y = y - 25;
+                    this.X = x;
+                    this.Y = y - 25;
                     break;
                 case Const.Direction.RIGHT:
-                    this.x = x+25;
-                    this.y = y;
+                    this.X = x+25;
+                    this.Y = y;
                     break;
                 case Const.Direction.DOWN:
-                    this.x = x;
-                    this.y = y+25;
+                    this.X = x;
+                    this.Y = y+25;
                     break;
                 case Const.Direction.LEFT:
-                    this.x = x-25;
-                    this.y = y;
+                    this.X = x-25;
+                    this.Y = y;
                     break;
             }
-            X1 = x - 5;
-            Y1 = y - 5;
-            X2 = x + 5;
-            Y2 = y + 5;
+        }
+
+        public Shell()
+        {
+        }
+
+        public void Initialization()
+        {
+            X1 = this.X - 5;
+            Y1 = this.Y - 5;
+            X2 = this.X + 5;
+            Y2 = this.Y + 5;
         }
 
         public void Paint(Graphics graphics)
         {
             Brush brush = new SolidBrush(Color.Black);
             Pen pen = new Pen(Color.Black);
-            int x = this.x;
-            int y = this.y;
+            int x = this.X;
+            int y = this.Y;
             graphics.FillEllipse(brush, x-5, y-5, 10, 10);
             graphics.DrawEllipse(pen, x-5, y-5, 10, 10);
         }
 
         public void Move()
         {
-            switch(direction)
+            switch(Direction)
             {
                 case Const.Direction.UP:
-                    y -= speed;
+                    Y -= Speed;
                     break;
                 case Const.Direction.RIGHT:
-                    x += speed;
+                    X += Speed;
                     break;
                 case Const.Direction.DOWN:
-                    y += speed;
+                    Y += Speed;
                     break;
                 case Const.Direction.LEFT:
-                    x -= speed;
+                    X -= Speed;
                     break;
             }
-            X1 = x - 5;
-            Y1 = y - 5;
-            X2 = x + 5;
-            Y2 = y + 5;
+            X1 = X - 5;
+            Y1 = Y - 5;
+            X2 = X + 5;
+            Y2 = Y + 5;
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,15 +118,7 @@ namespace Kyrsach.Game_objects
 
         // Типы
 
-
         // Поля
-        //статы
-        private int speed;
-
-        //техническая информация отображаемая
-        private int x;
-        private int y;
-
 
         // Методы
     }

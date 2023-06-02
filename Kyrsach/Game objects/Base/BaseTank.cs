@@ -35,6 +35,7 @@ namespace Kyrsach.Game_objects.Base
 
         // Поля
         public TankGraphis[] TankDirection { get; set; }
+        public bool FirstDark { get; set; } = true;
 
 
         // Методы
@@ -56,7 +57,7 @@ namespace Kyrsach.Game_objects.Base
             int offsetTrackX=0;
             int offsetTrackY=0;
 
-            if (firstDark)
+            if (FirstDark)
             {
                 brushCaterpillar = brush;
                 brushTrack = brushDark;
@@ -120,11 +121,6 @@ namespace Kyrsach.Game_objects.Base
             graphics.DrawPolygon(pen, OffsetPoints(TankDirection[(int)direction].tower,x,y));
         }
 
-        public void Move()
-        {
-            firstDark = !firstDark;
-        }
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Реализация
@@ -138,7 +134,6 @@ namespace Kyrsach.Game_objects.Base
 
 
         // Поля
-        private bool firstDark = true;
         private Point[] changePoints = new Point[COUNT_CORNERS_TOWER];
         private Pen pen = new Pen(Color.Black, 1);
         private Brush brush = new SolidBrush(Color.Green);
