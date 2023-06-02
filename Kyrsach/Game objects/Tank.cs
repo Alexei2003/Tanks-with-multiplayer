@@ -3,50 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Kyrsach.Game_objects.Base;
 
 namespace Kyrsach.Game_objects
 {
+    [Serializable]
     internal class Tank
     {
         // Интерфейс
         // Константы
+        [JsonIgnore]
         public const int SIZE_HITBOX = 20;
+        [JsonIgnore]
         public const int SIZE_MOVE = 5;
 
         // Типы
 
 
         // Поля
-        public BaseTank TankGraphis { get; set; }
+        [JsonIgnore]
         public int X1 { get; set; }
+        [JsonIgnore]
         public int Y1 { get; set; }
-
+        [JsonIgnore]
         public int X2 { get; set; }
+        [JsonIgnore]
         public int Y2 { get; set; }
-        public int HP { get; set; } = 1;
-
+        [JsonIgnore]
         public Const.Direction keyDirection { get; set; } = Const.Direction.DEFAULT;
+        [JsonIgnore]
+        public int RemainingTimeReload { get; set; }
+        public int HP { get; set; } = 1;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Const.Direction Direction { get; set; }
+
 
         // Методы
-        public Tank(int x, int y, bool bot, Const.Direction direction)
+        public Tank(int x, int y, Const.Direction direction)
         {
-            TankGraphis = new BaseTank();
-            this.x = x;
-            this.y = y;
-            this.bot = bot;
-            this.direction = direction;
+            this.X = x;
+            this.Y = y;
+            this.Direction = direction;
 
-            X1 = x - SIZE_HITBOX;
-            X2 = x + SIZE_HITBOX;
-            Y1 = y - SIZE_HITBOX;
-            Y2 = y + SIZE_HITBOX;
+            Initialization();
+
+            RemainingTimeReload = timeReload;
+        }
+
+        public Tank()
+        {
+        }
+
+        public void Initialization()
+        {
+            tankGraphis = new BaseTank();
+
+            X1 = this.X - SIZE_HITBOX;
+            X2 = this.X + SIZE_HITBOX;
+            Y1 = this.Y - SIZE_HITBOX;
+            Y2 = this.Y + SIZE_HITBOX;
         }
 
         public void Paint(Graphics graphics)
         {
-            TankGraphis.Paint(graphics, direction, x, y);
+            tankGraphis.Paint(graphics, Direction, X, Y);
         }
 
         public void Move(Const.Direction direction)
@@ -54,31 +77,44 @@ namespace Kyrsach.Game_objects
             switch (direction)
             {
                 case Const.Direction.UP:
-                    y -= speed;
+                    Y -= speed;
                     break;
                 case Const.Direction.RIGHT:
-                    x += speed;
+                    X += speed;
                     break;
                 case Const.Direction.DOWN:
-                    y += speed;
+                    Y += speed;
                     break;
                 case Const.Direction.LEFT:
-                    x -= speed;
+                    X -= speed;
                     break;
             }
-            this.direction = direction;
-            TankGraphis.Move();
-            X1 = x - SIZE_HITBOX;
-            X2 = x + SIZE_HITBOX;
-            Y1 = y - SIZE_HITBOX;
-            Y2 = y + SIZE_HITBOX;
+            this.Direction = direction;
+            tankGraphis.Move();
+            X1 = X - SIZE_HITBOX;
+            X2 = X + SIZE_HITBOX;
+            Y1 = Y - SIZE_HITBOX;
+            Y2 = Y + SIZE_HITBOX;
         }
 
         public Shell Shoot()
         {
-            return new Shell(x,y,direction,damage,speed);
+            return new Shell(X, Y, Direction, damage, speed);
         }
 
+        public void StartTankReload()
+        {
+            RemainingTimeReload = timeReload;
+        }
+
+        public void TankReload()
+        {
+            if (RemainingTimeReload > 0)
+            {
+                RemainingTimeReload--;
+
+            }
+        }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Реализация
@@ -92,14 +128,10 @@ namespace Kyrsach.Game_objects
         //статы
         private int damage = 1;
         private int speed = 5;
-        private int reload = 1;
+        private int timeReload = 10;
 
         //техническая информация отображаемая
-        private int x;
-        private int y;
-        private Const.Direction direction;
-
-        private bool bot;
+        private BaseTank tankGraphis;
 
         // Методы
     }

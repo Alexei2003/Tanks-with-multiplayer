@@ -61,6 +61,8 @@ namespace Kyrsach.Game_objects
         {
             Brush brush = new SolidBrush(Color.Black);
             Pen pen = new Pen(Color.Black);
+            int x = this.x;
+            int y = this.y;
             graphics.FillEllipse(brush, x-5, y-5, 10, 10);
             graphics.DrawEllipse(pen, x-5, y-5, 10, 10);
         }

@@ -66,7 +66,6 @@ namespace Kyrsach.Game_objects.Base
                 brushCaterpillar = brushDark;
                 brushTrack = brush;
             }
-
             graphics.FillRectangle(brushCaterpillar, OffsetRectangle(TankDirection[(int)direction].caterpillar, x, y));
             graphics.FillRectangle(brushCaterpillar, OffsetRectangle(TankDirection[(int)direction].caterpillar2, x, y));
             graphics.DrawRectangle(pen, OffsetRectangle(TankDirection[(int)direction].caterpillar, x, y));
@@ -246,7 +245,7 @@ namespace Kyrsach.Game_objects.Base
         private Point[] OffsetPoints(Point[] points, int x, int y)
         {
             Array.Copy(points,changePoints,points.Length);
-            for (int i = 0; i < points.Length; i++)
+            for (int i=0;i<COUNT_CORNERS_TOWER;i++)
             {
                 changePoints[i].Offset(x, y);
             }

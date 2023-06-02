@@ -124,9 +124,9 @@
         private Point[] OffsetPoints(Point[] points, int x, int y)
         {
             Array.Copy(points, changePoints, points.Length);
-            for (int i = 0; i < points.Length; i++)
+            foreach (var changePoint in changePoints)
             {
-                changePoints[i].Offset(x, y);
+                changePoint.Offset(x, y);
             }
             return changePoints;
         }

@@ -1,12 +1,5 @@
 ﻿using Kyrsach.Game_objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Xml.Serialization;
-using System.ComponentModel;
+using Kyrsach.Networks.Local;
 
 namespace Kyrsach.Mechanics
 {
@@ -14,7 +7,7 @@ namespace Kyrsach.Mechanics
     {
         // Интерфейс
         // Константы
-        
+
 
         // Типы
 
@@ -22,28 +15,68 @@ namespace Kyrsach.Mechanics
         // Поля
 
         // Методы
-        public Logic(int CountTank)
+        public Logic(int countTank, string[] iPs, string serverIp, bool server)
         {
-            listTanks = new Tank[CountTank];
-            listTanks[0] = new Tank(300, 150, false, Const.Direction.UP);
-            listTanks[1] = new Tank(300, 300, false, Const.Direction.UP);
-            listTanks[2] = new Tank(300, 400, false, Const.Direction.UP);
-            listTanks[3] = new Tank(300, 500, false, Const.Direction.UP);
-            
 
-            listWalls = new List<Wall>();   
+            TimerCallback timerCallback;
+            if (!server)
+            {
+                udpClient = new UdpClient(serverIp,false);
+                udpClient.GetAuthenticationData();
+                numbTank = udpClient.NumbTank;
+                countTank = udpClient.CountTank;
+            }
+
+            listTanks = new Tank[countTank];
+            if(countTank > 0)
+            {
+                listTanks[0] = new Tank(300, 150, Const.Direction.UP);
+                if (countTank > 1)
+                {
+                    listTanks[1] = new Tank(300, 300, Const.Direction.UP);
+                    if (countTank > 2)
+                    {
+                        listTanks[2] = new Tank(300, 400, Const.Direction.UP);
+                        if (countTank > 3)
+                        {
+                            listTanks[3] = new Tank(300, 500, Const.Direction.UP);
+                        }
+                    }
+                }
+            }
+
+            listWalls = new List<Wall>();
             listWalls.Add(new Wall(15, 15, 30, Const.Direction.RIGHT));
             listWalls.Add(new Wall(15, 45, 28, Const.Direction.DOWN));
-            listWalls.Add(new Wall(15, 15 + Const.SIZE_CELL*29, 30, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15, 15 + Const.SIZE_CELL * 29, 30, Const.Direction.RIGHT));
             listWalls.Add(new Wall(15 + Const.SIZE_CELL * 29, 45, 28, Const.Direction.DOWN));
 
             listWalls.Add(new Wall(363, 45, 10, Const.Direction.DOWN));
 
-            listShells = new List<Shell>();
+            listShells = new List<Shell>();           
 
-            TimerCallback timerCallback = new TimerCallback(Logic_Thread);
-            System.Threading.Timer timer = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
-            //timer.Dispose();
+            if (server)
+            {
+                //udpClient = new UdpClient(serverIp,true);
+                udpServer = new UdpServer(countTank);
+                numbTank = 0;
+                udpServer.ClientsIP = iPs;
+                udpServer.SetIPAddres();
+                udpServer.SendAuthenticationData();
+
+
+                timerCallback = new TimerCallback(ThreadNetworkServer);
+                timerNetwork = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+
+                timerCallback = new TimerCallback(ThreadLogic);
+                timerLogic = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+            }
+
+            if (!server)
+            {
+                timerCallback = new TimerCallback(ThreadNetworkClient);
+                timerNetwork = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+            }
         }
 
         public void Paint(Graphics graphics)
@@ -60,14 +93,17 @@ namespace Kyrsach.Mechanics
                 tank.Paint(graphics);
             }
 
-            foreach(Wall wall in listWalls) 
+            foreach (Wall wall in listWalls)
             {
                 wall.Paint(graphics);
             }
 
-            foreach(Shell shell in listShells)
+            lock (lockShell)
             {
-                shell.Paint(graphics);
+                foreach (Shell shell in listShells)
+                {
+                    shell.Paint(graphics);
+                }
             }
         }
 
@@ -76,23 +112,23 @@ namespace Kyrsach.Mechanics
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    listTanks[indexTank].keyDirection = Const.Direction.UP;
+                    listTanks[numbTank].keyDirection = Const.Direction.UP;
                     break;
                 case Keys.D:
-                    listTanks[indexTank].keyDirection= Const.Direction.RIGHT;
+                    listTanks[numbTank].keyDirection = Const.Direction.RIGHT;
                     break;
                 case Keys.S:
-                    listTanks[indexTank].keyDirection = Const.Direction.DOWN;
+                    listTanks[numbTank].keyDirection = Const.Direction.DOWN;
                     break;
                 case Keys.A:
-                    listTanks[indexTank].keyDirection = Const.Direction.LEFT;
+                    listTanks[numbTank].keyDirection = Const.Direction.LEFT;
                     break;
                 case Keys.Space:
-                    listTanks[indexTank].keyDirection = Const.Direction.SPACE;
+                    listTanks[numbTank].keyDirection = Const.Direction.SPACE;
                     break;
             }
         }
-            
+
         public void KeyUp(KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -103,7 +139,7 @@ namespace Kyrsach.Mechanics
                 case Keys.S:
                 case Keys.A:
                 case Keys.Space:
-                    listTanks[indexTank].keyDirection = Const.Direction.DEFAULT;
+                    listTanks[numbTank].keyDirection = Const.Direction.DEFAULT;
                     break;
             }
         }
@@ -121,10 +157,16 @@ namespace Kyrsach.Mechanics
         private List<Wall> listWalls;
         private Tank[] listTanks;
         private List<Shell> listShells;
-        private int indexTank = 0;
+        private int numbTank;
+        private System.Threading.Timer timerLogic;
+        private System.Threading.Timer timerNetwork;
+        private UdpClient udpClient;
+        private UdpServer udpServer;
+
+        private object lockShell = new object();
 
         // Методы
-        private bool CheckCollision(int x1, int y1, int x2, int y2,Const.Direction direction, int X1, int Y1, int X2, int Y2)
+        private bool CheckCollision(int x1, int y1, int x2, int y2, Const.Direction direction, int X1, int Y1, int X2, int Y2)
         {
             int up = 0;
             int right = 0;
@@ -182,13 +224,27 @@ namespace Kyrsach.Mechanics
                 selectTank.Move(direction);
             }
         }
-           
-        private void Logic_Thread(object state)
+
+        private void ThreadLogic(object state)
         {
             MoveShells();
             ControlTanks();
         }
-        
+        private void ThreadNetworkServer(object state)
+        {
+            //udpClient.SendDate(listTanks[numbTank]);
+
+            udpServer.GetDate(listTanks);
+
+            udpServer.SendData(listTanks);
+        }
+
+        private void ThreadNetworkClient(object state)
+        {
+            udpClient.SendDate(listTanks[numbTank]);
+            udpClient.GetData(listTanks,numbTank);
+        }
+
         private void MoveShells()
         {
 
@@ -281,15 +337,19 @@ namespace Kyrsach.Mechanics
                 }
             }
 
-            foreach (Shell shell in shellRemove)
+            lock (lockShell)
             {
-                listShells.Remove(shell);
+                foreach (Shell shell in shellRemove)
+                {
+                    listShells.Remove(shell);
+                }
             }
+
         }
 
         private void ControlTanks()
         {
-            foreach(var tank in listTanks)
+            foreach (var tank in listTanks)
             {
                 if (tank.HP < 1)
                 {
@@ -310,9 +370,15 @@ namespace Kyrsach.Mechanics
                         CheckTankCollision(tank, Const.Direction.LEFT);
                         break;
                     case Const.Direction.SPACE:
-                        listShells.Add(tank.Shoot());
+                        if (tank.RemainingTimeReload == 0)
+                        {
+                            listShells.Add(tank.Shoot());
+                            tank.StartTankReload();
+                        }
                         break;
-               }
+                }
+
+                tank.TankReload();
             }
         }
     }
