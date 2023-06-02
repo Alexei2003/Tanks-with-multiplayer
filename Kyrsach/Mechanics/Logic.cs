@@ -33,16 +33,16 @@ namespace Kyrsach.Mechanics
             listTanks = new Tank[countTank];
             if(countTank > 0)
             {
-                listTanks[0] = new Tank(300, 150, Const.Direction.UP);
+                listTanks[0] = new Tank(Const.SIZE_CELL * 2, Const.SIZE_CELL * 2, Const.Direction.DOWN);
                 if (countTank > 1)
                 {
-                    listTanks[1] = new Tank(300, 300, Const.Direction.UP);
+                    listTanks[1] = new Tank(Const.SIZE_CELL * 28, Const.SIZE_CELL * 28, Const.Direction.UP);
                     if (countTank > 2)
                     {
-                        listTanks[2] = new Tank(300, 400, Const.Direction.UP);
+                        listTanks[2] = new Tank(Const.SIZE_CELL * 2, Const.SIZE_CELL * 28, Const.Direction.UP);
                         if (countTank > 3)
                         {
-                            listTanks[3] = new Tank(300, 500, Const.Direction.UP);
+                            listTanks[3] = new Tank(Const.SIZE_CELL * 28, Const.SIZE_CELL * 2, Const.Direction.DOWN);
                         }
                     }
                 }
@@ -54,7 +54,32 @@ namespace Kyrsach.Mechanics
             listWalls.Add(new Wall(15, 15 + Const.SIZE_CELL * 29, 30, Const.Direction.RIGHT));
             listWalls.Add(new Wall(15 + Const.SIZE_CELL * 29, 45, 28, Const.Direction.DOWN));
 
-            listWalls.Add(new Wall(363, 45, 10, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL *13, 15 + Const.SIZE_CELL *1, 14, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL *13, 15 + Const.SIZE_CELL *2, 14, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 10, 15 + Const.SIZE_CELL * 7, 12, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 21, 15 + Const.SIZE_CELL * 3, 6, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 5, 15 + Const.SIZE_CELL * 1, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 7, 15 + Const.SIZE_CELL * 11, 8, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 1, 15 + Const.SIZE_CELL * 11, 2, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 1, 15 + Const.SIZE_CELL * 11, 2, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 3, 15 + Const.SIZE_CELL * 22, 10, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 3, 15 + Const.SIZE_CELL * 16, 3, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 3, 15 + Const.SIZE_CELL * 17, 3, Const.Direction.RIGHT));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 9, 15 + Const.SIZE_CELL * 27 ,3, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 10, 15 + Const.SIZE_CELL * 27, 3, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 21, 15 + Const.SIZE_CELL * 21, 8, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 22, 15 + Const.SIZE_CELL * 21, 8, Const.Direction.DOWN));
+
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 19, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 20, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 21, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 22, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 23, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 24, 15 + Const.SIZE_CELL * 13, 6, Const.Direction.DOWN));
+
+            listWalls.Add(new Wall(15 + Const.SIZE_CELL * 17, 15 + Const.SIZE_CELL * 7, 12, Const.Direction.RIGHT));
+
+
 
             listShells = new List<Shell>();           
 

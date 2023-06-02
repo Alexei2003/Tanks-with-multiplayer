@@ -88,47 +88,69 @@ namespace Kyrsach
         {
             if (countPlayers != 0)
             {
-                this.Text = "Сервер";
-                pServer.Visible = false;
-                this.Focus();
-                pGameInfo.Visible = true;
-                pbGameZone.Visible = true;
-
                 string[] iPs = new string[countPlayers];
+                bool flag = false;
 
                 if (countPlayers > 0)
                 {
                     iPs[0] = tbIP1.Text;
+                    if (iPs[0] == "")
+                    {
+                        flag = true;
+                    }
                     if (countPlayers > 1)
                     {
                         iPs[1] = tbIP2.Text;
+                        if (iPs[1] == "")
+                        {
+                            flag = true;
+                        }
                         if (countPlayers > 2)
                         {
                             iPs[2] = tbIP3.Text;
+                            if (iPs[2] == "")
+                            {
+                                flag = true;
+                            }
                             if (countPlayers > 3)
                             {
                                 iPs[3] = tbIP4.Text;
+                                if (iPs[3] == "")
+                                {
+                                    flag = true;
+                                }
                             }
                         }
                     }
                 }
 
-                logic = new Logic(countPlayers, iPs, iPs[0], true);
+                if (!flag) {
+                    this.Text = "Сервер";
+                    pServer.Visible = false;
+                    this.Focus();
+                    pGameInfo.Visible = true;
+                    pbGameZone.Visible = true;
 
-                startGame = true;
+                    logic = new Logic(countPlayers, iPs, iPs[0], true);
+
+                    startGame = true;
+                }
             }
         }
 
         private void bStartGameClient_Click(object sender, EventArgs e)
         {
-            this.Text = "Клиент";
-            logic = new Logic(0, null, tbServerIp.Text, false);
-            pClient.Visible = false;
-            this.Focus();
-            pGameInfo.Visible = true;
-            pbGameZone.Visible = true;
+            if(tbClientIP.Text != "")
+            {
+                this.Text = "Клиент";
+                logic = new Logic(0, null, tbServerIp.Text, false);
+                pClient.Visible = false;
+                this.Focus();
+                pGameInfo.Visible = true;
+                pbGameZone.Visible = true;
 
-            startGame = true;
+                startGame = true;
+            }
         }
         private static string GetIPAddress()
         {
