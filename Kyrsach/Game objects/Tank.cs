@@ -42,10 +42,12 @@ namespace Kyrsach.Game_objects
             this.Y = y;
             this.Direction = direction;
 
+            // Выполнение инициализации танка
             Initialization();
 
             RemainingTimeReload = timeReload;
         }
+
 
         public Tank()
         {
@@ -55,6 +57,7 @@ namespace Kyrsach.Game_objects
         {
             tankGraphis = new BaseTank();
 
+            // Установка границ прямоугольной области столкновения танка
             X1 = this.X - SIZE_HITBOX;
             X2 = this.X + SIZE_HITBOX;
             Y1 = this.Y - SIZE_HITBOX;
