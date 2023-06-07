@@ -93,10 +93,10 @@ namespace Kyrsach.Mechanics
 
 
                 timerCallback = new TimerCallback(ThreadNetworkServerSend);
-                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, NETWORK_TIME);
 
                 timerCallback = new TimerCallback(ThreadNetworkServerGet);
-                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, NETWORK_TIME);
 
                 timerCallback = new TimerCallback(ThreadLogic);
                 timerLogic = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
@@ -105,10 +105,10 @@ namespace Kyrsach.Mechanics
             if (!server)
             {
                 timerCallback = new TimerCallback(ThreadNetworkClientSend);
-                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerNetworkSend = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, NETWORK_TIME);
 
                 timerCallback = new TimerCallback(ThreadNetworkClientGet);
-                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, LOGIC_TIME);
+                timerNetworkGet = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, NETWORK_TIME);
             }
             timerCallback = new TimerCallback(ThreadMessage);
             timerMessage = new System.Threading.Timer(timerCallback, null, TimeSpan.Zero, MESSAGE_TIME);
@@ -198,7 +198,8 @@ namespace Kyrsach.Mechanics
 
         // Реализация
         // Константы
-        private TimeSpan LOGIC_TIME = TimeSpan.FromMilliseconds(50);
+        private TimeSpan LOGIC_TIME = TimeSpan.FromMilliseconds(100);
+        private TimeSpan NETWORK_TIME = TimeSpan.FromMilliseconds(100);
         private TimeSpan MESSAGE_TIME = TimeSpan.FromMilliseconds(100);
 
         // Типы

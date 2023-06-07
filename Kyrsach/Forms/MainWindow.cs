@@ -124,7 +124,8 @@ namespace Kyrsach
                     }
                 }
 
-                if (!flag) {
+                if (!flag)
+                {
                     this.Text = "Сервер";
                     pServer.Visible = false;
                     this.Focus();
@@ -140,7 +141,7 @@ namespace Kyrsach
 
         private void bStartGameClient_Click(object sender, EventArgs e)
         {
-            if(tbClientIP.Text != "")
+            if (tbClientIP.Text != "")
             {
                 this.Text = "Клиент";
                 logic = new Logic(0, null, tbServerIp.Text, false);

@@ -168,7 +168,6 @@
             // 
             tbIP1.Location = new Point(77, 43);
             tbIP1.Name = "tbIP1";
-            tbIP1.ReadOnly = true;
             tbIP1.Size = new Size(130, 25);
             tbIP1.TabIndex = 9;
             tbIP1.Visible = false;
@@ -329,7 +328,7 @@
             // 
             pbGameZone.Location = new Point(0, 0);
             pbGameZone.Name = "pbGameZone";
-            pbGameZone.Size = new Size(900, 900);
+            pbGameZone.Size = new Size(900, 959);
             pbGameZone.TabIndex = 15;
             pbGameZone.TabStop = false;
             pbGameZone.Visible = false;
@@ -341,12 +340,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             BackgroundImage = Properties.Resources.Background;
-            ClientSize = new Size(1234, 899);
+            ClientSize = new Size(1234, 959);
             Controls.Add(pMainMenu);
             Controls.Add(pServer);
             Controls.Add(pClient);
-            Controls.Add(pGameInfo);
             Controls.Add(pbGameZone);
+            Controls.Add(pGameInfo);
             DoubleBuffered = true;
             MaximizeBox = false;
             Name = "MainWindow";
